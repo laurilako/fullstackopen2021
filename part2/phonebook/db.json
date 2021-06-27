@@ -1,0 +1,39 @@
+{
+  "persons": [
+    {
+      "name": "Arto Järvinen",
+      "number": "040-123456",
+      "id": 1
+    },
+    {
+      "name": "Kalle Ikkuna",
+      "number": "050-491294",
+      "id": 2
+    },
+    {
+      "name": "Miika Testaaja",
+      "number": "040-589128",
+      "id": 3
+    },
+    {
+      "name": "Petteri Heikkinen",
+      "number": "050-142812",
+      "id": 4
+    },
+    {
+      "name": "Pera Poranen",
+      "number": "040-4289131",
+      "id": 5
+    },
+    {
+      "name": "Testi Henkilö",
+      "number": "040-38127",
+      "id": 6
+    },
+    {
+      "name": "Koe Kaniini",
+      "number": "050-3722913",
+      "id": 7
+    }
+  ]
+}
