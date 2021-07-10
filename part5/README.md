@@ -1,3 +1,14 @@
+Frontend of Bloglist application, using backend that was built in part4.
+
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
