@@ -1,7 +1,6 @@
 const initialState = null
 
 const notificationReducer = (state = initialState, action) => {
-    console.log("DATA", action.data)
     switch (action.type){
         case 'VOTE_NOTIFICATION': {
             return state = `you voted '${action.data.content}'`

@@ -1,8 +1,6 @@
 const initialFilter = ['']
 
 const filterReducer = (state = initialFilter, action) => {
-    console.log('state now: ', state)
-    console.log('action', action)
     switch (action.type) {
         case 'FILTERCHANGE': {
             return action.data

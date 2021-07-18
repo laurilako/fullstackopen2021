@@ -5,10 +5,9 @@ import { onVote, nullNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
     const dispatch = useDispatch()
-    const filter = useSelector(state => state.filter)
+    const anecdoteFilter = useSelector(state => state.filter)
     const anecdotes = useSelector(state => state.anecdotes)
     const vote = (id, content) => {
-        console.log('vote', id)
         dispatch(voteAnecdote(id))
         dispatch(onVote(content))
         setTimeout(() => {
@@ -19,7 +18,7 @@ const AnecdoteList = () => {
     return(
       <div>
         <h2>Anecdotes</h2>
-        {filter ? anecdotes.filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
+        {anecdoteFilter ? anecdotes.filter((anecdote) => anecdote.content.toLowerCase().includes(anecdoteFilter.toString().toLowerCase()))
           .sort((a, b) => b.votes - a.votes)
           .map(anecdote =>
             <div key={anecdote.id}>
