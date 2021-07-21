@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -6,16 +7,15 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [refresh, setRefresh] = useState(false)
-  const [errMessage, setErrorMessage] = useState(null)
-  const [isError, setError] = useState(false)
   const [user, setUser] = useState(null)
-
   const blogFormRef = useRef()
 
   useEffect (() => {
@@ -44,10 +44,11 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setErrorMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        // setErrorMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+        // setTimeout(() => {
+        //   setErrorMessage(null)
+        // }, 5000)
+        dispatch(setNotification(`a new blog '${blogObject.title} by ${blogObject.author}' added`, 5))
         setRefresh(true)
       })
   }
@@ -65,18 +66,18 @@ const App = () => {
         username, password
       })
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('Wrong username or password')
-      setError(true)
-      setTimeout(() => {
-        setErrorMessage(null)
-        setError(false)
-      }, 5000)
+      // setErrorMessage('Wrong username or password')
+      // setError(true)
+      // setTimeout(() => {
+      //   setErrorMessage(null)
+      //   setError(false)
+      // }, 5000)
+      dispatch(setNotification('Wrong username or password', 5))
     }
   }
 
@@ -86,20 +87,22 @@ const App = () => {
       if(res.status === 204){
         setBlogs(blogs.filter((o) => o.id !== id))
       } else {
-        setErrorMessage('Error while deleting blog')
-        setError(true)
-        setTimeout(() => {
-          setErrorMessage('')
-          setError(false)
-        }, 5000)
+        dispatch(setNotification('Error while deleting blog', 5))
+        // setErrorMessage('Error while deleting blog')
+        // setError(true)
+        // setTimeout(() => {
+        //   setErrorMessage('')
+        //   setError(false)
+        // }, 5000)
       }
     } catch (error) {
-      setErrorMessage('Error while deleting blog')
-      setError(true)
-      setTimeout(() => {
-        setErrorMessage('')
-        setError(false)
-      }, 5000)
+      dispatch(setNotification('Error while deleting blog', 5))
+      // setErrorMessage('Error while deleting blog')
+      // setError(true)
+      // setTimeout(() => {
+      //   setErrorMessage('')
+      //   setError(false)
+      // }, 5000)
     }
   }
 
@@ -111,12 +114,13 @@ const App = () => {
         blogs.map((o) => (o.id === updated.id ? updated : o))
       )
     } catch (error) {
-      setErrorMessage('Error while updating blog')
-      setError(true)
-      setTimeout(() => {
-        setErrorMessage('')
-        setError(false)
-      }, 5000)
+      dispatch(setNotification('Error while updating blog', 5))
+      // setErrorMessage('Error while updating blog')
+      // setError(true)
+      // setTimeout(() => {
+      //   setErrorMessage('')
+      //   setError(false)
+      // }, 5000)
     }
   }
 
@@ -145,7 +149,7 @@ const App = () => {
   return (
     <div>
       <h1>Blogs</h1>
-      <Notification message={errMessage} error={isError}/>
+      <Notification/>
       {user === null ? 
         loginForm() :
         <div>
