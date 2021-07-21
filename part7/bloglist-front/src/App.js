@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -8,15 +8,18 @@ import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification } from './reducers/notificationReducer'
+import { addNewBlog, deleteBlog, initBlogs, likeBlog } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [refresh, setRefresh] = useState(false)
   const [user, setUser] = useState(null)
+  const [refresh, setRefresh] = useState(false)
   const blogFormRef = useRef()
+  console.log('BLOGS', blogs)
+
 
   useEffect (() => {
     const loggedUser = window.localStorage.getItem('loggedBlogappUser')
@@ -25,32 +28,21 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
+    dispatch(initBlogs())
+  }, [dispatch])
 
   useEffect(()=> {
     if(refresh === true){
-      blogService.getAll().then(blogs =>
-        setBlogs(blogs))
+      dispatch(initBlogs())
     }
     setRefresh(false)
   }, [refresh])
 
   const handleCreate = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        // setErrorMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-        // setTimeout(() => {
-        //   setErrorMessage(null)
-        // }, 5000)
-        dispatch(setNotification(`a new blog '${blogObject.title} by ${blogObject.author}' added`, 5))
-        setRefresh(true)
-      })
+    dispatch(addNewBlog(blogObject))
+    setRefresh(true)
+    dispatch(setNotification(`a new blog '${blogObject.title} by ${blogObject.author}' added`, 5))
   }
 
   const handleLogout = async (e) => {
@@ -71,56 +63,27 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      // setErrorMessage('Wrong username or password')
-      // setError(true)
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      //   setError(false)
-      // }, 5000)
       dispatch(setNotification('Wrong username or password', 5))
     }
   }
 
-  const blogRemoval = async (id) => {
+  const blogRemoval = (blog) => {
     try {
-      const res = await blogService.removeBlog(id)
-      if(res.status === 204){
-        setBlogs(blogs.filter((o) => o.id !== id))
-      } else {
-        dispatch(setNotification('Error while deleting blog', 5))
-        // setErrorMessage('Error while deleting blog')
-        // setError(true)
-        // setTimeout(() => {
-        //   setErrorMessage('')
-        //   setError(false)
-        // }, 5000)
-      }
+      console.log('blogtoremove', blog)
+      dispatch(deleteBlog(blog.id))
+      setRefresh(true)
+      dispatch(setNotification(`Deleted blog ${blog.title} by ${blog.author}`))
     } catch (error) {
       dispatch(setNotification('Error while deleting blog', 5))
-      // setErrorMessage('Error while deleting blog')
-      // setError(true)
-      // setTimeout(() => {
-      //   setErrorMessage('')
-      //   setError(false)
-      // }, 5000)
     }
   }
 
-  const blogUpdate = async (id, blogObject) => {
+  const blogUpdate = (id, blogObject) => {
     try {
-      await blogService.update(id, blogObject)
-      const updated = { ...blogObject, id }
-      setBlogs(
-        blogs.map((o) => (o.id === updated.id ? updated : o))
-      )
+      dispatch(likeBlog(id, blogObject))
+      setRefresh(true)
     } catch (error) {
       dispatch(setNotification('Error while updating blog', 5))
-      // setErrorMessage('Error while updating blog')
-      // setError(true)
-      // setTimeout(() => {
-      //   setErrorMessage('')
-      //   setError(false)
-      // }, 5000)
     }
   }
 

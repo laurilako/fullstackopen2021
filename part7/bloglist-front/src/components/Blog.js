@@ -14,7 +14,7 @@ const Blog = ({blog, blogUpdate, blogRemoval, currUser}) => {
 
   const handleRemove = () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
-      blogRemoval(blog.id)
+      blogRemoval(blog)
     }
   }
 
