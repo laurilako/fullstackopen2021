@@ -9,7 +9,7 @@ const blogReducer = (state = [], action) => {
     return updatedBlog
   }
   case 'DELETE': {
-    const updatedBlog = state.filter(o => o.id !== action.data)
+    const updatedBlog = state.filter(o => o.id !== action.data.id)
     return updatedBlog
   }
   case 'NEW':
@@ -29,22 +29,23 @@ export const addNewBlog = (content) => {
   }
 }
 
-export const likeBlog = (id, blogObject) => {
+export const likeBlog = (blog) => {
+  blog = { ...blog, likes: blog.likes + 1}
   return async dispatch => {
-    const updatedBlog = await blogService.update(id, blogObject)
+    await blogService.update(blog.id, blog)
     dispatch({
       type: 'LIKE',
-      data: updatedBlog
+      data: blog
     })
   }
 }
 
-export const deleteBlog = (id) => {
+export const deleteBlog = (blog) => {
   return async dispatch => {
-    await blogService.removeBlog(id)
+    await blogService.removeBlog(blog.id)
     dispatch({
       type: 'DELETE',
-      data: id
+      data: blog
     })
   }
 }

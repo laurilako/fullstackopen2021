@@ -17,10 +17,9 @@ const Blog = ({blog, blogUpdate, blogRemoval, currUser}) => {
       blogRemoval(blog)
     }
   }
-
+  
   const handleSendLike = () => {
-    const blogObject = { ...blog, likes: blog.likes + 1}
-    blogUpdate(blog.id, blogObject)
+    blogUpdate(blog)
   }
 
   return(

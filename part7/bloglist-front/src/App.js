@@ -18,8 +18,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [refresh, setRefresh] = useState(false)
   const blogFormRef = useRef()
-  console.log('BLOGS', blogs)
-
 
   useEffect (() => {
     const loggedUser = window.localStorage.getItem('loggedBlogappUser')
@@ -27,8 +25,8 @@ const App = () => {
       const user = JSON.parse(loggedUser)
       setUser(user)
       blogService.setToken(user.token)
+      dispatch(initBlogs())
     }
-    dispatch(initBlogs())
   }, [dispatch])
 
   useEffect(()=> {
@@ -42,7 +40,8 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     dispatch(addNewBlog(blogObject))
     setRefresh(true)
-    dispatch(setNotification(`a new blog '${blogObject.title} by ${blogObject.author}' added`, 5))
+    dispatch(setNotification(`A new blog '${blogObject.title}' by ${blogObject.author} added`, 5))
+    dispatch(initBlogs())
   }
 
   const handleLogout = async (e) => {
@@ -62,45 +61,21 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      dispatch(initBlogs())
     } catch (exception) {
       dispatch(setNotification('Wrong username or password', 5))
     }
   }
 
   const blogRemoval = (blog) => {
-    try {
-      console.log('blogtoremove', blog)
-      dispatch(deleteBlog(blog.id))
-      setRefresh(true)
-      dispatch(setNotification(`Deleted blog ${blog.title} by ${blog.author}`))
-    } catch (error) {
-      dispatch(setNotification('Error while deleting blog', 5))
-    }
+    dispatch(deleteBlog(blog))
+    dispatch(setNotification(`Blog '${blog.title}' by ${blog.author} removed`, 5))
   }
 
-  const blogUpdate = (id, blogObject) => {
-    try {
-      dispatch(likeBlog(id, blogObject))
-      setRefresh(true)
-    } catch (error) {
-      dispatch(setNotification('Error while updating blog', 5))
-    }
+  const blogUpdate = (blog) => {
+    dispatch(likeBlog(blog))
+    dispatch(setNotification(`Liked blog '${blog.title}' by ${blog.author}`, 5))
   }
-
-  const loginForm = () => (
-    <LoginForm
-      username={username} 
-      password={password} 
-      handleUsernameChange={({target }) => setUsername(target.value)}
-      handlePasswordChange={({target}) => setPassword(target.value)}
-      handleSubmit={handleLogin}/>
-  )
-
-  const blogForm = () => (
-    <Togglable buttonLabel="Add a new blogpost" hidebutton={'cancel'} ref={blogFormRef}>
-      <BlogForm createBlogPost={handleCreate}/>
-    </Togglable>
-  )
 
   const blog = () => (
     blogs
@@ -114,14 +89,21 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification/>
       {user === null ? 
-        loginForm() :
+        <LoginForm
+          username={username} 
+          password={password} 
+          handleUsernameChange={({target }) => setUsername(target.value)}
+          handlePasswordChange={({target}) => setPassword(target.value)}
+          handleSubmit={handleLogin}/> :
         <div>
           <form onSubmit={handleLogout}>
             <p>Logged in as {user.name}<button type="submit">logout</button></p>
           </form>
           {blog()}
           <h1>Add a new blog</h1>
-          {blogForm()}
+          <Togglable buttonLabel="Add a new blogpost" hidebutton={'cancel'} ref={blogFormRef}>
+            <BlogForm createBlogPost={handleCreate}/>
+          </Togglable>
         </div>
       }
     </div>
