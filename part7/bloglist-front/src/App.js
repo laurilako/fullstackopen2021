@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import LogoutForm from './components/LogoutForm'
 import { setNotification } from './reducers/notificationReducer'
 import { addNewBlog, deleteBlog, initBlogs, likeBlog } from './reducers/blogReducer'
-import { logIn, logOut, setExistingUser } from './reducers/userReducer'
+import { setExistingUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const blogFormRef = useRef()
 
   useEffect (() => {
@@ -30,17 +29,6 @@ const App = () => {
     dispatch(addNewBlog(blogObject))
     dispatch(setNotification(`A new blog '${blogObject.title}' by ${blogObject.author} added`, 5))
     dispatch(initBlogs())
-  }
-
-  const handleLogout = () => {
-    dispatch(logOut())
-  }
-
-  const handleLogin = (e) => {
-    e.preventDefault()
-    dispatch(logIn(username, password))
-    setUsername('')
-    setPassword('')
   }
 
   const blogRemoval = (blog) => {
@@ -67,16 +55,9 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification/>
       {user === null ? 
-        <LoginForm
-          username={username} 
-          password={password} 
-          handleUsernameChange={({target }) => setUsername(target.value)}
-          handlePasswordChange={({target}) => setPassword(target.value)}
-          handleSubmit={handleLogin}/> :
+        <LoginForm/> :
         <div>
-          <form onSubmit={handleLogout}>
-            <p>Logged in as {user.name}<button type="submit">logout</button></p>
-          </form>
+          <LogoutForm username={user.name}/>
           {blog()}
           <h1>Add a new blog</h1>
           <Togglable buttonLabel="Add a new blogpost" hidebutton={'cancel'} ref={blogFormRef}>
