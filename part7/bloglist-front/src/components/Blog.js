@@ -1,36 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import FullBlog from './FullBlog'
 
-const Blog = ({blog, blogUpdate, blogRemoval, currUser}) => {
-  const [showFull, setShowFull] = useState(false)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
-  const handleRemove = () => {
-    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
-      blogRemoval(blog)
-    }
-  }
-  
-  const handleSendLike = () => {
-    blogUpdate(blog)
-  }
-
+const Blog = ({ blog }) => {
   return(
-    <div className='blog-container' style={blogStyle}>
-      <div className='blog-title-author'>
-        {blog.title}, written by {blog.author}
+    <div className='blog-container'>
+      <div>
+        <FullBlog blog={blog} />
       </div>
-      <button id='viewbutton' onClick={() => setShowFull(!showFull)}>{showFull ? 'hide' : 'view'}</button>
-      {showFull ? (
-        <FullBlog blog={blog} sendLike={handleSendLike} user={currUser} removeBlog={handleRemove} />
-      ) : null}
     </div>
   )
 }

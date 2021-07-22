@@ -1,4 +1,0 @@
-// const credReducer = (state = [], action) => {
-
-
-// }

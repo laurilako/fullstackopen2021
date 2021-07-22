@@ -6,23 +6,26 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import LogoutForm from './components/LogoutForm'
+import Users from './components/Users'
+import User from './components/User'
 import { setNotification } from './reducers/notificationReducer'
-import { addNewBlog, deleteBlog, initBlogs, likeBlog } from './reducers/blogReducer'
+import { addNewBlog, initBlogs } from './reducers/blogReducer'
 import { setExistingUser } from './reducers/userReducer'
+import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
   const blogFormRef = useRef()
-
   useEffect (() => {
     dispatch(setExistingUser())
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(initBlogs())
-  }, [dispatch])
+    if(user){
+      dispatch(initBlogs())}
+  }, [user])
 
   const handleCreate = (blogObject) => {
     blogFormRef.current.toggleVisibility()
@@ -31,42 +34,63 @@ const App = () => {
     dispatch(initBlogs())
   }
 
-  const blogRemoval = (blog) => {
-    dispatch(deleteBlog(blog))
-    dispatch(setNotification(`Blog '${blog.title}' by ${blog.author} removed`, 5))
-    dispatch(initBlogs())
+  const matchUId = useRouteMatch('/users/:id')
+  const userdata = matchUId
+    ? blogs.filter((o) => o.user.id === matchUId.params.id)
+    : null
+
+  const matchBId = useRouteMatch('/blogs/:id')
+  const blogdata = matchBId
+    ? blogs.find((o) => o.id === matchBId.params.id)
+    : null
+
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
   }
-
-  const blogUpdate = (blog) => {
-    dispatch(likeBlog(blog))
-    dispatch(setNotification(`Liked blog '${blog.title}' by ${blog.author}`, 5))
-    dispatch(initBlogs())
-  }
-
-  const blog = () => (
-    blogs
-      .sort((a, b) => b.likes - a.likes)
-      .map(blog =>
-        <Blog key={blog.id} blog={blog} blogUpdate={blogUpdate} blogRemoval={blogRemoval} currUser={user} />)
-  )
-
   return (
     <div>
-      <h1>Blogs</h1>
-      <Notification/>
-      {user === null ? 
-        <LoginForm/> :
-        <div>
-          <LogoutForm username={user.name}/>
-          {blog()}
-          <h1>Add a new blog</h1>
-          <Togglable buttonLabel="Add a new blogpost" hidebutton={'cancel'} ref={blogFormRef}>
-            <BlogForm createBlogPost={handleCreate}/>
-          </Togglable>
-        </div>
-      }
+      <h2>Blogs</h2>
+      <Notification />
+      <Switch>
+        <Route path='/users/:id'>
+          <User userdata={userdata} />
+        </Route>
+        <Route path='/blogs/:id'>
+          <LogoutForm />
+          <Blog blog={blogdata} />
+        </Route>
+        <Route path='/users'>
+          <Users />
+        </Route>
+        <Route path='/'>
+          {user === null ? (
+            <div>
+              <LoginForm />
+            </div>
+          ) : (
+            <div>
+              <LogoutForm />
+              <div>
+                {blogs
+                  .sort((a, b) => b.likes - a.likes)
+                  .map(blog => 
+                    <div key={blog.id} style={blogStyle}>
+                      <Link to={`/blogs/${blog.id}`}>{blog.title} </Link>
+                    </div>)}
+              </div>
+              <h1>Add a new blog</h1>
+              <Togglable buttonLabel="Add a new blogpost" hidebutton={'cancel'} ref={blogFormRef}>
+                <BlogForm createBlogPost={handleCreate}/>
+              </Togglable>
+            </div>
+          )}
+        </Route>
+      </Switch>
     </div>
   )
 }
-
 export default App
