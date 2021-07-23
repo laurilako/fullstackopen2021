@@ -25,6 +25,8 @@ const FullBlog = ({ blog }) => {
   if(!blog){
     return null
   }
+  console.log(blog)
+  console.log(blog.user.name)
   return(
     <div className='blog-full'>
       <h1>{blog.title}</h1>

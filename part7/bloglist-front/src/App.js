@@ -8,11 +8,11 @@ import BlogForm from './components/BlogForm'
 import LogoutForm from './components/LogoutForm'
 import Users from './components/Users'
 import User from './components/User'
+import Nav from './components/Nav'
 import { setNotification } from './reducers/notificationReducer'
 import { addNewBlog, initBlogs } from './reducers/blogReducer'
 import { setExistingUser } from './reducers/userReducer'
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
-
 const App = () => {
   const dispatch = useDispatch()
   const blogs = useSelector(state => state.blogs)
@@ -53,17 +53,19 @@ const App = () => {
   }
   return (
     <div>
-      <h2>Blogs</h2>
       <Notification />
       <Switch>
         <Route path='/users/:id'>
+          <Nav />
           <User userdata={userdata} />
         </Route>
         <Route path='/blogs/:id'>
+          <Nav />
           <LogoutForm />
           <Blog blog={blogdata} />
         </Route>
         <Route path='/users'>
+          <Nav />
           <Users />
         </Route>
         <Route path='/'>
@@ -73,7 +75,9 @@ const App = () => {
             </div>
           ) : (
             <div>
+              <Nav />
               <LogoutForm />
+              <h2>Blogs</h2>
               <div>
                 {blogs
                   .sort((a, b) => b.likes - a.likes)
