@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import propTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { initBlogs } from '../reducers/blogReducer'
 
 const BlogForm = ({ createBlogPost }) => {
+  const dispatch = useDispatch()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -28,6 +31,7 @@ const BlogForm = ({ createBlogPost }) => {
     setUrl('')
     setTitle('')
     setAuthor('')
+    dispatch(initBlogs())
   } 
 
   return(

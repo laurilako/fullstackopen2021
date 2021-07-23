@@ -1,13 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { likeBlog, deleteBlog, createComment, initBlogs } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const FullBlog = ({ blog }) => {
   let history = useHistory()
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
+  const [comment, setComment] = useState('')
+
+  const handleCommentCreation = (e) => {
+    e.preventDefault()
+    dispatch(createComment(blog.id, comment))
+    setComment('')
+    dispatch(initBlogs())
+  }
 
   const handleRemove = () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
@@ -25,8 +33,7 @@ const FullBlog = ({ blog }) => {
   if(!blog){
     return null
   }
-  console.log(blog)
-  console.log(blog.user.name)
+
   return(
     <div className='blog-full'>
       <h1>{blog.title}</h1>
@@ -35,6 +42,16 @@ const FullBlog = ({ blog }) => {
       </div>
       <div>Added by: {blog.user.name}</div>
       {user.username === blog.user.username ? <button id='removebutton' onClick={handleRemove}>remove</button> : null}
+      <h3>Comments</h3>
+      <form onSubmit={handleCommentCreation}>
+        <input id='comment' type='text' value={comment} onChange={({target }) => setComment(target.value)}/>
+        <button type='submit'>Add comment</button>
+      </form>
+      {blog.comments.map((o, index) => 
+        <div key={index}>
+          <li>{o}</li>
+        </div>
+      )}
     </div>
   )
 }
