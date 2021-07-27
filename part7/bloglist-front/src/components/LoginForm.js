@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { logIn } from '../reducers/userReducer'
+import { useHistory } from 'react-router-dom'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
+  let history = useHistory()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -12,6 +14,7 @@ const LoginForm = () => {
     dispatch(logIn(username, password))
     setUsername('')
     setPassword('')
+    history.push('/')
   }
 
   return(
