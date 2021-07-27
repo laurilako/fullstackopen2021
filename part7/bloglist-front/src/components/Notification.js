@@ -22,7 +22,6 @@ justify-content: center;
 
 const Notification = () => {
   const notification = useSelector(state => state.notification)
-  console.log(notification)
   if(notification.message && notification.error === false){
     return(
       <Notif>
