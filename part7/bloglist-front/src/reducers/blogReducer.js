@@ -9,7 +9,7 @@ const blogReducer = (state = [], action) => {
     return updatedBlog
   }
   case 'COMMENT': {
-    const updatedBlog = state.map(o => o.id !== action.data.id ? o : action.data)
+    const updatedBlog = state.map(o => o.id === action.data.id ? action.data : o)
     return updatedBlog
   }
   case 'DELETE': {

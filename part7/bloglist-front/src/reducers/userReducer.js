@@ -46,8 +46,9 @@ export const logIn = (username, password) => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
       dispatch(setExistingUser())
+      dispatch(setNotification('Successful login!', false, 3))
     } catch (error) {
-      dispatch(setNotification('Invalid username or password!', 5))
+      dispatch(setNotification('Invalid username or password!', true, 5))
     }
   }
 }

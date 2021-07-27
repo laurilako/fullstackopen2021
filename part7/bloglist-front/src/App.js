@@ -11,6 +11,29 @@ import { initBlogs } from './reducers/blogReducer'
 import { setExistingUser } from './reducers/userReducer'
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom'
 import Bloglist from './components/Bloglist'
+import styled, { createGlobalStyle } from 'styled-components'
+
+const GlobalStyle = createGlobalStyle`
+body {
+  background: #fffbf0;
+  height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+`
+
+const Navigation = styled.div`
+text-decoration: ;
+display: flex;
+justify-content: center;
+background: #e4ddf4;
+padding: 1em;
+font-weight: bold;
+`
+
+const Page = styled.div`
+display: flex;
+justify-content: center;
+`
 
 const App = () => {
   const dispatch = useDispatch()
@@ -37,24 +60,37 @@ const App = () => {
 
   return (
     <div>
-      <Nav />
+      <GlobalStyle />
+      <Navigation>
+        <Nav />
+      </Navigation>
       <Notification />
       <Switch>
         <Route path='/users/:id'>
-          <User userdata={userdata} />
+          <Page>
+            <User userdata={userdata} />
+          </Page>
         </Route>
         <Route path='/blogs/:id'>
           <LogoutForm />
-          <Blog blog={blogdata} />
+          <Page>
+            <Blog blog={blogdata} />
+          </Page>
         </Route>
         <Route path='/users'>
-          <Users />
+          <Page>
+            <Users />
+          </Page>
         </Route>
         <Route path='/login'>
-          {!user ? <LoginForm /> : <Redirect to='/' /> }
+          <Page>
+            {!user ? <LoginForm /> : <Redirect to='/' /> }
+          </Page>
         </Route>
         <Route path='/'>
-          {user ? <Bloglist /> : <Redirect to='/login' /> }
+          <Page>
+            {user ? <Bloglist /> : <Redirect to='/login' /> }
+          </Page>
         </Route>
       </Switch>
     </div>

@@ -10,8 +10,7 @@ const FullBlog = ({ blog }) => {
   const user = useSelector(state => state.user)
   const [comment, setComment] = useState('')
 
-  const handleCommentCreation = (e) => {
-    e.preventDefault()
+  const handleCommentCreation = () => {
     dispatch(createComment(blog.id, comment))
     setComment('')
     dispatch(initBlogs())
@@ -20,14 +19,14 @@ const FullBlog = ({ blog }) => {
   const handleRemove = () => {
     if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
       dispatch(deleteBlog(blog))
-      dispatch(setNotification(`Blog '${blog.title}' by ${blog.author} removed`, 5))
+      dispatch(setNotification(`Blog '${blog.title}' by ${blog.author} removed`, false, 5))
       history.push('/')
     }
   }
   
   const handleSendLike = () => {
     dispatch(likeBlog(blog))
-    dispatch(setNotification(`Liked blog '${blog.title}' by ${blog.author}`, 5))
+    dispatch(setNotification(`Liked blog '${blog.title}' by ${blog.author}`, false, 5))
   }
 
   if(!blog){

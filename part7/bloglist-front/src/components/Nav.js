@@ -7,8 +7,8 @@ const Nav = () => {
   }
   return(
     <div>
-      <Link style={padding} to='/'>Blogs</Link>
-      <Link style={padding} to='/users'>Users</Link>
+      <Link style={padding} to='/'>BLOGS</Link>
+      <Link style={padding} to='/users'>USERS</Link>
     </div>
   )
 }

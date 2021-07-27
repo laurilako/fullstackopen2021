@@ -1,4 +1,4 @@
-const initialState = null
+const initialState = {message: null, error: null}
 let timeout = null
 
 const notificationReducer = (state = initialState, action) => {
@@ -11,17 +11,17 @@ const notificationReducer = (state = initialState, action) => {
   }
 }
 
-export const setNotification = (message, time) => {
+export const setNotification = (message, error, time) => {
   if(timeout) {window.clearTimeout(timeout)}
   return async dispatch => {
     dispatch({
       type: 'SET',
-      data: message
+      data: {message: message, error: error}
     })
     timeout = setTimeout(() => {
       dispatch({
         type: 'SET',
-        data: null
+        data: {message: null, error: null}
       })
     }, time*1000)
   }
