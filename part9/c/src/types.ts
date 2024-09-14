@@ -2,7 +2,7 @@ export type Diagnosis = {
     code: string;
     name: string;
     latin?: string;
-    };
+};
 
 export type Patient = {
     id: string;
@@ -13,4 +13,12 @@ export type Patient = {
     occupation: string;
 };
 
+export enum Gender {
+    Male = 'male',
+    Female = 'female',
+    Other = 'other',
+}
+
 export type NonSensitivePatientEntry = Omit<Patient, 'ssn'>;
+
+export type NewPatientEntry = Omit<Patient, 'id'>;
