@@ -1,6 +1,7 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import patientsService from '../services/patientsService';
-import { toNewPatientEntry } from '../utils';
+import { NewPatientEntry, NonSensitivePatientEntry } from '../types';
+import { NewPatientEntrySchema } from '../utils';
 
 const router = express.Router();
 
@@ -8,18 +9,18 @@ router.get('/', (_req, res) => {
   res.send(patientsService.getNonSensitiveEntries());
 });
 
-router.post('/', (req, res) => {
+const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {
   try {
-    const newPatientEntry = toNewPatientEntry(req.body);
-    const addedEntry = patientsService.addPatient(newPatientEntry);
-    res.json(addedEntry);
+    NewPatientEntrySchema.parse(req.body);
+    next();
   } catch (e: unknown) {
-    let errorMessage = 'Error!';
-    if (e instanceof Error) {
-      errorMessage = e.message;
-    }
-    res.status(400).send(errorMessage);
+    next(e);
   }
+};
+
+router.post('/', newPatientParser, (req: Request<unknown, unknown, NewPatientEntry>, res: Response<NonSensitivePatientEntry[]>) => {
+  const newPatientEntry = patientsService.addPatient(req.body);
+  res.json(newPatientEntry);
 });
 
 export default router;
