@@ -1,1 +1,37 @@
 part9/patientor/
+part9/flight-diary-main/
+
+
+TODO:
+
+- exercice 4 
+
+- LAB DEBUG5 
+
+- MP INTRO Makefiles
+
+
+	#Documentation is valid	1.0	Validator for the documentation passes without any problems. E.g. if you paste your documentation into the Swagger Editor, it shows no errors/warnings.
+	
+	#Documentation structure	0.5	The documentation uses good structure to support its maintainability. Everything is only defined in one place.
+	
+	#Documentation coverage	1.0	Every path is documented, and every available method for each path is also documented.
+	
+	Response examples	2.0	All necessary examples are shown for each response body in the documentation. This includes different variations for resources that can have highly varying information.
+	Response codes	1.0	The documentation covers all response codes from the API, including error codes. Correct error codes are used for everything.
+	Request bodies	1.0	Enough information about how to form request bodies is included in each request in the documentation. At minimum schema is included, examples are also included if needed.
+2. Hypermedia Design	4.0	
+	State diagram	2.0	The state diagram exists. Standard link relations are used correctly, and custom link relations are used only if needed.
+	Custom link relations	1.0	Custom link relations are explained, and they are correctly justified. Custom link relations are included where needed.
+	Connectedness	1.0	The state diagram achieves full connectedness - there are no deadends or isolated resources
+	
+	
+3. Hypermedia Implementation	7.5	
+	Implementation works	1.0	The implementation works, as shown by a demonstration. The reviewer doesn't find any problems in the code.
+	Testing coverage	1.5	Test coverage in relevant files is 96% or higher for 1,5p, 91-95% for 1p, 85-90% for 0,5p.
+	Link relations match design	2.0	Link relations in the hypermedia controls match the state diagram.
+	Control implementation	2.0	Each control provides all of the information necessary to make the request. In particular, pay attention to including a correct schema in the control that clients can use to generate a form that will result in a valid request.
+	Implementation quality	1.0	Inclusion of hypermedia into responses is implemented in a way that makes the code easy to understand and maintain.
+	
+	
+	Neljännesfinaaleissa, semifinaaleissa ja finaaleissa pelataan paras seitsemästä –järjestelmällä (neljä voittoa). Kaikissa pelivaiheissa runkosarjan parhaiten sijoittuneet joukkueet saavat kotiedun ts. aloittavat ottelusarjat kotonaan. Vastustajat valikoituvat siten, että pelivaiheen parhaiten runkosarjassa sijoittunut joukkue kohtaa heikoimmin sijoittuneen, toiseksi paras toiseksi heikoimmin sijoittuneen jne.
