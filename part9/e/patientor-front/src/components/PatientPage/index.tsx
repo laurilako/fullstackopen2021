@@ -15,7 +15,6 @@ const PatientPage: React.FC = () => {
         console.log(patient);
     };
 
-
     useEffect(() => {
         void fetchPatient();
     });
@@ -28,6 +27,17 @@ const PatientPage: React.FC = () => {
             <p>SSN: {patient?.ssn}</p>
             <p>Date of Birth: {patient?.dateOfBirth}</p>
             <p>Occupation: {patient?.occupation}</p>
+            <h3>Entries</h3>
+            {patient?.entries.map(entry => (
+                <div key={entry.id}>
+                    <p>{entry.date} {entry.description}</p>
+                    <ul>
+                        {entry.diagnosisCodes?.map(code => (
+                            <li key={code}>{code}</li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
         </div>
     );
 };
