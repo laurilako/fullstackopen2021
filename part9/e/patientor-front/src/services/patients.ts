@@ -33,7 +33,7 @@ const getDiagnoses = async () => {
   );
 
   return data;
-}
+};
 
 export default {
   getAll, create, getWithId, getDiagnoses
